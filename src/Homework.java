@@ -1,52 +1,30 @@
 import stanford.karel.SuperKarel;
 public class Homework extends SuperKarel {
-    private int width = 0;
-    private int height = 0;
-    private int moves =0;
+    private int width = 1;
+    private int height = 1;
+    private int moves = 0;
     private int totalBeepers=1000;
     public void run(){
         setBeepersInBag(1000);
-        scanAndCleanMap();
-        startDividing();
+        discoverMap();
+        mapDivider(width,height);
         System.out.println("moves: "+ moves);
         System.out.println("Beepers: " + totalBeepers);
         System.out.println("Width : " + width + "\nHeight : " + height);
     }
-    private void scanAndCleanMap(){
-        System.out.println("Scanning and cleaning started..");
-        cleanRow();
-        height++; // this is to calculate the world's dimension (y-axis) while cleaning the map
-        while (leftIsClear()){
-            turnLeft();
+    private void discoverMap(){
+        while(frontIsClear()){
             moveAndCount();
-            turnLeft();
-            cleanRow();
+            width++;
+        }
+        turnLeft();
+        while(frontIsClear()){
+            moveAndCount();
             height++;
-            if (rightIsClear()){
-                turnRight();
-                moveAndCount();
-                turnRight();
-                cleanRow();
-                height++;
-            } else
-                turnAround();
         }
         backHome();
-        System.out.println("Cleaning is done, and the robot is back home\n");
-    }
-    private void cleanRow(){
-        checkAndPickBeeper();
-        catchingBeepers();
-    }
-    private void startDividing(){
-        //if(frontIsBlocked()){
-        //   turnLeft();
-        //}
-        System.out.println("Dividing the map in progress");
-        mapDivider(width,height);
     }
     private void backHome(){
-        System.out.println("Back home in progress");
         while (notFacingWest())
             turnLeft();
         while (frontIsClear())
@@ -83,9 +61,11 @@ public class Homework extends SuperKarel {
         }else if(height==1 && width==4){
             edgeCaseDividing();
         }else if(width==1 && height==3){
+            turnLeft();
             moveAndCount();
             addBeeper();
         }else if(width==1 && height==4){
+            turnLeft();
             edgeCaseDividing();
         }else{
             addBeeper();
@@ -95,22 +75,6 @@ public class Homework extends SuperKarel {
             addBeeper();
         }
         backHome();
-    }
-    private void edgeCaseDividing(){
-        moveAndCount();
-        addBeeper();
-        moveAndCount();
-        moveAndCount();
-        addBeeper();
-    }
-    private void edgeCaseDividing2(){
-        addBeeper();
-        moveAndCount();
-        moveAndCount();
-        addBeeper();
-        moveAndCount();
-        moveAndCount();
-        addBeeper();
     }
     private void threeRoomDividing(int width,int height){
         if(width==1 && height==5){
@@ -146,6 +110,22 @@ public class Homework extends SuperKarel {
             addBeeper();
         }
         backHome();
+    }
+    private void edgeCaseDividing(){
+        moveAndCount();
+        addBeeper();
+        moveAndCount();
+        moveAndCount();
+        addBeeper();
+    }
+    private void edgeCaseDividing2(){
+        addBeeper();
+        moveAndCount();
+        moveAndCount();
+        addBeeper();
+        moveAndCount();
+        moveAndCount();
+        addBeeper();
     }
     int countChambers=0;
     final int towMoves=2;
@@ -281,9 +261,9 @@ public class Homework extends SuperKarel {
             turnLeft();
             addingBeepers();
             turnRight();
-            putRightLine();
+            addHorizontalLine();
             turnRight();
-            putRightLine();
+            addHorizontalLine();
             turnLeft();
             backHome();
         }
@@ -293,9 +273,9 @@ public class Homework extends SuperKarel {
             turnRight();
             addingBeepers();
             turnRight();
-            putRightLine();
+            addHorizontalLine();
             turnRight();
-            putRightLine();
+            addHorizontalLine();
             backHome();
         }
     }
@@ -334,45 +314,20 @@ public class Homework extends SuperKarel {
         turnLeft();
         addingBeepers();
     }
-    private void putRightLine(){
+    private void addHorizontalLine(){
         moveAndCount();
         addBeeper();
         turnRight();
         addingBeepers();
     }
-    private void rowDownLeft(){
-        moveAndCount();
-        turnLeft();
-        moveAndCount();
-    }
-    private void rowDownRight(){
-        moveAndCount();
-        turnRight();
-        moveAndCount();
-    }
     private void moveAndCount(){
         move();
         moves++;
-    }
-    private void catchingBeepers() {
-        int currentWidth=1;
-        while(frontIsClear()){
-            moveAndCount();
-            currentWidth++;
-            checkAndPickBeeper();
-        }
-        width=Math.max(width,currentWidth);
     }
     private void addingBeepers() {
         while(frontIsClear()){
             moveAndCount();
             addBeeper();
-        }
-    }
-    private void checkAndPickBeeper() {
-        if(beepersPresent()){
-            pickBeeper();
-            totalBeepers++;
         }
     }
     private void addBeeper(){
