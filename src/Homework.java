@@ -8,6 +8,7 @@ public class Homework extends SuperKarel {
         setBeepersInBag(1000);
         discoverMap();
         mapDivider(width,height);
+        backHome();
         System.out.println("moves: "+ moves);
         System.out.println("Beepers: " + totalBeepers);
         System.out.println("Width : " + width + "\nHeight : " + height);
@@ -52,7 +53,6 @@ public class Homework extends SuperKarel {
     }
     private void oneRoomDividing(){
         System.out.println("Do nothing, keep the map as is");
-        backHome();
     }
     private void twoRoomDividing(int width,int height){
         if(height==1 && width==3){
@@ -84,11 +84,9 @@ public class Homework extends SuperKarel {
         else if(width==1 && height==6){
             turnLeft();
             edgeCaseDividing2();
-        }else if(height==1 && width==5){
-            edgeCaseDividing();
-        }else if(height==1 && width==6){
-            edgeCaseDividing2();
-        }else if(width==3 && height==2){
+        }else if(height==1 && width==5) edgeCaseDividing();
+        else if(height==1 && width==6) edgeCaseDividing2();
+        else if(width==3 && height==2){
             addBeeper();
             moveAndCount();
             moveAndCount();
@@ -130,10 +128,7 @@ public class Homework extends SuperKarel {
     int countChambers=0;
     final int towMoves=2;
     private void fourRoomDividing(int width, int height){
-
-        if(width%2==0 && height==1){
-            fourChamDividingForNx1_1xN(width,height);
-        }
+        if(width%2==0 && height==1) fourChamDividingForNx1_1xN(width,height);
         else if(width%2==1 && height==1){
             if(width==7){
                 moveAndCount();
@@ -177,12 +172,51 @@ public class Homework extends SuperKarel {
                 height--;
                 fourChamDividingForNx1_1xN(width,height);
             }
-        }else if(width==2 && height>7){
-            fourChamDividingForNx2_2xN(width,height);
+        }else if(height==2 && (width==4 || width==5 || width==6)){
+            if(width==4) specialCaseFor2();
+            else if(width==5){
+                fourRoomDividing(4,2);
+                turnRight();
+                moveAndCount();
+                addBeeper();
+                turnRight();
+                moveAndCount();
+                addBeeper();
+            }else{
+                fourRoomDividing(5,2);
+                turnLeft();
+                moveAndCount();
+                addBeeper();
+                turnLeft();
+                moveAndCount();
+                addBeeper();
+            }
+        }else if(width==2 && (height==4 || height==5 || height==6)){
+            if(height==4){
+                moveAndCount();
+                addBeeper();
+                turnLeft();
+                specialCaseFor2();
+            }else if(height==5){
+                fourRoomDividing(2,4);
+                turnRight();
+                moveAndCount();
+                addBeeper();
+                turnRight();
+                moveAndCount();
+                addBeeper();
+            }else{
+                fourRoomDividing(2,5);
+                turnLeft();
+                moveAndCount();
+                addBeeper();
+                turnLeft();
+                moveAndCount();
+                addBeeper();
+            }
         }
-        else if(height==2 && width>7){
-            fourChamDividingForNx2_2xN(width,height);
-        }
+        else if(width==2 && height>7) fourChamDividingForNx2_2xN(width,height);
+        else if(height==2 && width>7) fourChamDividingForNx2_2xN(width,height);
         else if(width%2==0 && height%2==0){
             evenWidthDivider(width);
             evenHeightDivider(height);
@@ -196,7 +230,23 @@ public class Homework extends SuperKarel {
             oddWidthDivider(width);
             evenHeightDivider(height);
         }
-        backHome();
+    }
+    private void specialCaseFor2(){
+        addBeeper();
+        moveAndCount();
+        turnLeft();
+        moveAndCount();
+        addBeeper();
+        turnRight();
+        moveAndCount();
+        turnRight();
+        moveAndCount();
+        addBeeper();
+        turnLeft();
+        moveAndCount();
+        turnLeft();
+        moveAndCount();
+        addBeeper();
     }
     private void fourChamDividingForNx2_2xN(int width,int height){
         if(height==2){
